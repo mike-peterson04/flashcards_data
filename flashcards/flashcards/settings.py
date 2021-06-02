@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'flashcards.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django',
-        'NAME': 'music_library_database',
+        'NAME': 'flashcards',
         'USER': 'root',
         'PASSWORD': 'bakasama99',
         'HOST': '127.0.0.1',
