@@ -28,7 +28,7 @@ class CollectionMethods(APIView):
 class CardCollectionMethods(APIView):
     def get(self, request, collection_id):
         try:
-            cards = Card.objects.filter(collection_id=collection_id)
+            cards = Card.objects.filter(pk=collection_id)
         except ValueError:
             return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
         serializer = CardSerializer(cards, many=True)
@@ -39,15 +39,27 @@ class CardCollectionMethods(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CardMethods(APIView):
 
     def put(self, request, collection_id, card_id):
-        pass
-    # TODO build method to edit an existing card
+        try:
+            card = Card.objects.get(pk=card_id)
+        except:
+            return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+        serializer = CardSerializer(data=request.data)
+        if serializer.is_valid():
+            card = serializer.update(card, request.data)
+            return Response(CardSerializer(card).data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, collection_id, card_id):
-        pass
-    # TODO build method to delete a card
+        try:
+            card = Card.objects.get(pk=card_id)
+        except ValueError:
+            return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+        delete = CardSerializer(card)
+        card.delete()
+        return Response(delete.data, status=status.HTTP_200_OK)
