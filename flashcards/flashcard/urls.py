@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.CollectionMethods.as_view()),
+    path('collection/<collection_id>/', views.CardCollectionMethods.as_view()),
+    path('collection/<collection_id>/card/<card_id>/', views.CardMethods.as_view())
 ]

@@ -5,28 +5,41 @@ from rest_framework import status
 from .serializer import CollectionSerializer, CardSerializer
 
 
-
 # collection endpoints
 class CollectionMethods(APIView):
 
     def get(self, request):
-        #TODO build method to return all collections
-        pass
+        try:
+            collections = Collection.objects.all()
+        except ValueError:
+            return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+        serializer = CollectionSerializer(collections, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        # TODO build method to create new collection
-        pass
+        serializer = CollectionSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
 # Card endpoints
 class CardCollectionMethods(APIView):
     def get(self, request, collection_id):
-        # TODO build method to return all cards in a collections
-        pass
+        try:
+            cards = Card.objects.filter(collection_id=collection_id)
+        except ValueError:
+            return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
+        serializer = CardSerializer(cards, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self,request,collection_id):
-        # TODO build method to create a new card within a collections
-        pass
+    def post(self, request, collection_id):
+        serializer = CardSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CardMethods(APIView):
