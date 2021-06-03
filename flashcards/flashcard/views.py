@@ -28,7 +28,7 @@ class CollectionMethods(APIView):
 class CardCollectionMethods(APIView):
     def get(self, request, collection_id):
         try:
-            cards = Card.objects.filter(pk=collection_id)
+            cards = Card.objects.filter(collection_id=collection_id)
         except ValueError:
             return Response(request.data, status=status.HTTP_400_BAD_REQUEST)
         serializer = CardSerializer(cards, many=True)
