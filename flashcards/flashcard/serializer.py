@@ -11,7 +11,7 @@ class CollectionSerializer(serializers.ModelSerializer):
 class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
-        fields = ['id', 'term', 'definition', 'collection_id']
+        fields = ['id', 'term', 'definition', 'collection']
 
     def update(self, instance, validated_data):
         instance.term = validated_data.get('term', instance.term)
